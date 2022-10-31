@@ -118,7 +118,7 @@ void drawMainHook(HakoniwaSequence *curSequence, sead::Viewport *viewport, sead:
     }
 
     gTextWriter->printf("Client Socket Connection Status: %s\n", Client::instance()->mSocket->getStateChar());
-	gTextWriter->printf("Udp socket status: %s\n", Client::instance()->mSocket->getUdpStateChar());
+    gTextWriter->printf("Udp socket status: %s\n", Client::instance()->mSocket->getUdpStateChar());
     //gTextWriter->printf("nn::socket::GetLastErrno: 0x%x\n", Client::instance()->mSocket->socket_errno);
     gTextWriter->printf("Connected Players: %d/%d\n", Client::getConnectCount() + 1, Client::getMaxPlayerCount());
     
@@ -439,7 +439,7 @@ bool hakoniwaSequenceHook(HakoniwaSequence* sequence) {
 void seadPrintHook(const char *fmt, ...)
 {
     va_list args;
-	va_start(args, fmt);
+    va_start(args, fmt);
 
     Logger::log(fmt, args);
 

@@ -26,7 +26,7 @@ SocketClient::SocketClient(const char* name, sead::Heap* heap) : mHeap(heap), So
     
     mRecvQueue.allocate(maxBufSize, mHeap);
     mSendQueue.allocate(maxBufSize, mHeap);
-	recvBuf = (char*)mHeap->alloc(MAXPACKSIZE+1);
+    recvBuf = (char*)mHeap->alloc(MAXPACKSIZE+1);
 };
 
 nn::Result SocketClient::init(const char* ip, u16 port) {

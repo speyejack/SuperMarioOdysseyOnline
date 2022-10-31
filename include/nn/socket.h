@@ -4,9 +4,9 @@
 
 struct pollfd
 {
-	s32   fd;
-	s16   events;
-	s16   revents;
+    s32   fd;
+    s16   events;
+    s16   revents;
 };
 
 struct in_addr

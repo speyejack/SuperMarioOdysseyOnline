@@ -135,12 +135,12 @@ void Client::restartConnection() {
         Logger::log("Succesfully Closed Socket.\n");
     }
 
-	Logger::log("Waiting for send/recv threads to finish.\n");
-	sInstance->mSocket->waitForThreads();
+    Logger::log("Waiting for send/recv threads to finish.\n");
+    sInstance->mSocket->waitForThreads();
 
     sInstance->mConnectCount = 0;
 
-	Logger::log("Reinitializing connection\n");
+    Logger::log("Reinitializing connection\n");
     sInstance->mIsConnectionActive = sInstance->mSocket->init(sInstance->mServerIP.cstr(), sInstance->mServerPort).isSuccess();
 
     if(sInstance->mSocket->getLogState() == SOCKET_LOG_CONNECTED) {
@@ -394,19 +394,19 @@ void Client::readFunc() {
                 maxPuppets = initPacket->maxPlayers - 1;
                 break;
             }
-			case PacketType::UDPINIT: {
-				UdpInit* initPacket = (UdpInit*)curPacket;
-				Logger::log("Received udp init packet from server\n");
-				
-				sInstance->mSocket->setPeerUdpPort(initPacket->port);
-				sendUdpHolePunch();
-				sendUdpInit();
-				
-				break;
-			}
-			case PacketType::HOLEPUNCH: 
-				sendUdpHolePunch();
-				break;
+            case PacketType::UDPINIT: {
+                UdpInit* initPacket = (UdpInit*)curPacket;
+                Logger::log("Received udp init packet from server\n");
+
+                sInstance->mSocket->setPeerUdpPort(initPacket->port);
+                sendUdpHolePunch();
+                sendUdpInit();
+
+                break;
+            }
+            case PacketType::HOLEPUNCH:
+                sendUdpHolePunch();
+                break;
             default:
                 Logger::log("Discarding Unknown Packet Type.\n");
                 break;
@@ -416,7 +416,7 @@ void Client::readFunc() {
 
         }else { // if false, socket has errored or disconnected, so restart the connection
             Logger::log("Client Socket Encountered an Error, restarting connection! Errno: 0x%x\n", mSocket->socket_errno);
-			this->restartConnection();
+            this->restartConnection();
         }
 
     }
@@ -978,7 +978,7 @@ void Client::sendUdpHolePunch() {
     sead::ScopedCurrentHeapSetter setter(sInstance->mHeap);
     
     HolePunch *packet = new HolePunch();
-	
+
     packet->mUserID = sInstance->mUserID;
 
     sInstance->mSocket->queuePacket(packet);
@@ -995,12 +995,12 @@ void Client::sendUdpInit() {
     }
 
     sead::ScopedCurrentHeapSetter setter(sInstance->mHeap);
-    
+
     UdpInit *packet = new UdpInit();
-	
+
     packet->mUserID = sInstance->mUserID;
-	packet->port = sInstance->mSocket->getLocalUdpPort();
-	
+    packet->port = sInstance->mSocket->getLocalUdpPort();
+
     sInstance->mSocket->queuePacket(packet);
 }
 /**
