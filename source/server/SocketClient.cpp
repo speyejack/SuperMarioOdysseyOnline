@@ -190,7 +190,19 @@ bool SocketClient::send(Packet *packet) {
     }
 
 
+	nn::os::Tick start = nn::os::GetSystemTick();
     if ((valread = nn::socket::Send(fd, buffer, packet->mPacketSize + sizeof(Packet), 0) > 0)) {
+
+		nn::os::Tick end = nn::os::GetSystemTick();
+		ticks += (end - start);
+		tick_count++;
+		if (tick_count >= 100) {
+
+			Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+
+			ticks = 0;
+			tick_count = 0;
+		}
         return true;
     } else {
         Logger::log("Failed to Fully Send Packet! Result: %d Type: %s Packet Size: %d\n", valread, packetNames[packet->mType], packet->mPacketSize);
@@ -560,15 +572,15 @@ bool SocketClient::trySendQueue() {
 
     mHeap->free(curPacket);
 
-	ticks += (end - start);
-	tick_count++;
-	if (tick_count >= 100) {
+	// ticks += (end - start);
+	// tick_count++;
+	// if (tick_count >= 100) {
 
-		Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+	// 	Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
 
-		ticks = 0;
-		tick_count = 0;
-	}
+	// 	ticks = 0;
+	// 	tick_count = 0;
+	// }
 
 	return successful;
 }
