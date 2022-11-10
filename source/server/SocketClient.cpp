@@ -527,8 +527,21 @@ void SocketClient::recvFunc() {
 
 bool SocketClient::queuePacket(Packet* packet) {
     if (socket_log_state == SOCKET_LOG_CONNECTED && mPacketQueueOpen) {
+
+		nn::os::Tick end = nn::os::GetSystemTick();
         mSendQueue.push((s64)packet,
                         sead::MessageQueue::BlockType::NonBlocking);  // as this is non-blocking, it
+		ticks += (end - last_send_time);
+		tick_count++;
+		if (tick_count >= 100) {
+
+			Logger::log("Average packet time since last queue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+
+			ticks = 0;
+			tick_count = 0;
+		}
+
+		last_send_time = nn::os::GetSystemTick();
                                                                       // will always return true.
         return true;
     } else {
@@ -547,15 +560,15 @@ bool SocketClient::trySendQueue() {
 
     mHeap->free(curPacket);
 
-	ticks += (end - start);
-	tick_count++;
-	if (tick_count >= 100) {
+	// ticks += (end - start);
+	// tick_count++;
+	// if (tick_count >= 100) {
 
-		Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+	// 	Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
 
-		ticks = 0;
-		tick_count = 0;
-	}
+	// 	ticks = 0;
+	// 	tick_count = 0;
+	// }
 
 	return successful;
 }

@@ -77,7 +77,9 @@ class SocketClient : public SocketBase {
         int pollTime = 0;
 
 	nn::os::Tick ticks = 0;
+	nn::os::Tick last_send_time = 0;
 	u32 tick_count = 0;
+
 
 
 
