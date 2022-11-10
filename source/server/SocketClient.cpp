@@ -539,13 +539,25 @@ bool SocketClient::queuePacket(Packet* packet) {
 
 bool SocketClient::trySendQueue() {
 
+	nn::os::Tick start = nn::os::GetSystemTick();
     Packet* curPacket = (Packet*)mSendQueue.pop(sead::MessageQueue::BlockType::Blocking);
+	nn::os::Tick end = nn::os::GetSystemTick();
 
     bool successful = send(curPacket);
 
     mHeap->free(curPacket);
 
-    return successful;
+	ticks += (end - start);
+	tick_count++;
+	if (tick_count >= 1000) {
+
+		Logger::log("Average 1000 dequeue: \d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+
+		ticks = 0;
+		tick_count = 0;
+	}
+
+	return successful;
 }
 
 Packet* SocketClient::tryGetPacket(sead::MessageQueue::BlockType blockType) {

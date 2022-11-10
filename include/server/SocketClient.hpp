@@ -76,6 +76,10 @@ class SocketClient : public SocketBase {
         bool mPacketQueueOpen = true;
         int pollTime = 0;
 
+	nn::os::Tick ticks = 0;
+	u32 tick_count = 0;
+
+
 
         bool mHasRecvUdp;
         s32 mUdpSocket;
