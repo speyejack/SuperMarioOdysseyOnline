@@ -140,8 +140,14 @@ void Client::restartConnection() {
 
     sInstance->mConnectCount = 0;
 
-	Logger::log("Reinitializing connection\n");
-    sInstance->mIsConnectionActive = sInstance->mSocket->init(sInstance->mServerIP.cstr(), sInstance->mServerPort).isSuccess();
+	if (sInstance->mReadThread->isDone()) {
+		Logger::log("Restarting client\n");
+		sInstance->startThread();
+	} else {
+
+		Logger::log("Reinitializing connection\n");
+		sInstance->mIsConnectionActive = sInstance->mSocket->init(sInstance->mServerIP.cstr(), sInstance->mServerPort).isSuccess();
+	}
 
     if(sInstance->mSocket->getLogState() == SOCKET_LOG_CONNECTED) {
 
