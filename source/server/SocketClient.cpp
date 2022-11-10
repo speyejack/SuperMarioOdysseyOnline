@@ -549,9 +549,9 @@ bool SocketClient::trySendQueue() {
 
 	ticks += (end - start);
 	tick_count++;
-	if (tick_count >= 1000) {
+	if (tick_count >= 100) {
 
-		Logger::log("Average 1000 dequeue: \d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
+		Logger::log("Average 100 dequeue: %d us\n", (ticks * 1000000) / (tick_count * nn::os::GetSystemTickFrequency()));
 
 		ticks = 0;
 		tick_count = 0;
